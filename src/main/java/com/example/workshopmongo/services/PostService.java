@@ -1,5 +1,6 @@
 package com.example.workshopmongo.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,15 @@ public class PostService {
 		Optional<Post> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
 	}
+	
+	
+	//aqui faz-se uma gambiarra no maxDate. Por padrão, a data é na meia noite de começo do dia
+	//Como queremos buscar até a data, precisa ser na meia noite do dia seguinte, então, adicionamos um dia
+	public List<Post> fullSearch(String text, Date minDate, Date maxDate) {
+		maxDate = new Date(maxDate.getTime() + 24 * 60 * 60 * 1000);
+		return repo.fullSearch(text, minDate, maxDate);
+	}
+	
 	
 	public List<Post> findByTitle(String text) {
 		return repo.searchTitle(text);
